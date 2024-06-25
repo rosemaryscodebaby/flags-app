@@ -1,14 +1,17 @@
 import React from 'react';
-import './App.css';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Flags from './Flags'; // Ensure this import is correct based on where Flags.js is located
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <h1 className="text-3xl font-bold underline">
-        TODO App
-      </h1>
-    </div>
+    <Router>
+      <div className="App">
+        <Switch>
+          <Route path="/" exact component={Flags} />
+        </Switch>
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;
