@@ -1,4 +1,4 @@
-// src/service/countries-service.js
+// src/service/countryService.js
 export const fetchCountries = async () => {
     try {
       const response = await fetch('https://restcountries.com/v3.1/all');

@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Flags from './Flags'; // Ensure this import is correct based on where Flags.js is located
+import Flags from './Flags';
 
 const App = () => {
   return (
