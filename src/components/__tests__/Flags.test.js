@@ -1,0 +1,41 @@
+import React from 'react';
+import { render, screen, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import Flags from '../Flags';
+import * as countryService from '../../services/countryService';
+
+jest.mock('../../services/countryService', () => ({
+    fetchCountries: jest.fn()
+}));
+
+const mockCountries = [
+    { name: { common: 'France' }, population: 67000000, flags: { png: 'https://flagcdn.com/w320/fr.png' } },
+    { name: { common: 'Germany' }, population: 83000000, flags: { png: 'https://flagcdn.com/w320/de.png'  } }
+];
+
+describe('Flags', () => {
+    beforeEach(() => {
+        countryService.fetchCountries.mockResolvedValue(mockCountries);
+    });
+
+    test('renders flags grid after fetching data', async () => {
+        await act(async () => {
+            render(<Flags />);
+        });
+        expect(screen.getByText('France')).toBeInTheDocument();
+        expect(screen.getByText('Germany')).toBeInTheDocument();
+    });
+
+    test('filters results based on search query', async () => {
+        await act(async () => {
+            render(<Flags />);
+        });
+        // Ensure that the state changes caused by user events are awaited
+        await userEvent.type(screen.getByPlaceholderText('Search by name or population'), 'Germany');
+        // Additional time for state to settle
+        await new Promise(r => setTimeout(r, 100));
+
+        expect(screen.queryByText('France')).not.toBeInTheDocument();
+        expect(screen.getByText('Germany')).toBeInTheDocument();
+    });
+});
