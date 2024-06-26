@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Flags from './Flags';
+import Flags from './components/Flags';
 
 const App = () => {
   return (
