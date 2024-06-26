@@ -1,8 +1,8 @@
-// src/utils/formatCountryDetails.js
-function formatCountryDetails(countryData) {
+// src/utils/util.js
+export function formatCountryDetails(countryData) {
     const details = countryData[0];
     const {
-        name: { common, official, nativeName },
+        name: { common, official },
         capital = [],
         latlng = [],
         borders = [],
@@ -11,6 +11,7 @@ function formatCountryDetails(countryData) {
         maps: { googleMaps } = {}
     } = details;
 
+    const nativeName = details.name.nativeName;
     const nativeNames = nativeName ? Object.values(nativeName)[0] : { official: '', common: '' };
     let nativeDisplay = nativeNames.official;
     if (nativeNames.common && nativeNames.common !== nativeNames.official) {
@@ -26,9 +27,23 @@ Lat/Long: ${latlng.join(', ') || 'N/A'}
 Neighboring Countries: ${borders.join(', ') || 'N/A'}
 Size (km^2): ${area || 'N/A'},
 Continent(s): ${continent || 'N/A'}
+Google Maps: ${googleMaps || 'N/A'}
 `;
 
     return { text: formattedDetails, googleMaps: googleMaps || '' };
 }
 
-export default formatCountryDetails;
+export function manageFavorites(countryName) {
+    const country = countryName.toLowerCase();
+    const favs = new Set(JSON.parse(localStorage.getItem('favs') || '[]'));
+
+    if (favs.has(country)) {
+        favs.delete(country);
+        console.log(`Removed ${country} from favorites`);
+    } else {
+        favs.add(country);
+        console.log(`Added ${country} to favorites`);
+    }
+
+    localStorage.setItem('favs', JSON.stringify(Array.from(favs)));
+}
