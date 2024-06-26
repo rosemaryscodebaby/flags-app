@@ -1,9 +1,13 @@
+// src/components/__tests__/Flags.test.js
 import React from 'react';
 import { render, screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Flags from '../Flags';
 import * as countryService from '../../services/countryService';
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
 
+// TODO fix issue with ag-grid dependency
 jest.mock('../../services/countryService', () => ({
     fetchCountries: jest.fn()
 }));
@@ -31,7 +35,7 @@ describe('Flags', () => {
             render(<Flags />);
         });
         // Ensure that the state changes caused by user events are awaited
-        await userEvent.type(screen.getByPlaceholderText('Search by name or population'), 'Germany');
+        await userEvent.type(screen.getByPlaceholderText('Search by keyword e.g. `Euro`'), 'Germany');
         // Additional time for state to settle
         await new Promise(r => setTimeout(r, 100));
 

@@ -4,10 +4,14 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { fetchCountries } from '../services/countryService';
 import SearchBar from './SearchBar';
+import formatCountryDetails from '../utils/util';
+import CONSTANTS from '../data/constants';
+
 
 const Flags = () => {
     const [rowData, setRowData] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
+    const [selectedCountryDetails, setSelectedCountryDetails] = useState(null);
     const [query, setQuery] = useState('');
 
     useEffect(() => {
@@ -36,18 +40,45 @@ const Flags = () => {
         { headerName: "Currencies", field: "currencies" }
     ];
 
+    const onRowClicked = async event => {
+        const countryName = event.data.name.common;
+        try {
+            const response = await fetch(`${CONSTANTS.RESTCOUNTRIES_BASE_URL}/name/${countryName}`);
+            const data = await response.json();
+            const details = formatCountryDetails(data);
+            setSelectedCountryDetails(details);
+        } catch (error) {
+            console.error('Error fetching country details:', error);
+        }
+    };
+
     return (
-        <div className="container mx-auto p-4">
-            <SearchBar query={query} setQuery={setQuery} />
-            <div className="ag-theme-alpine" style={{ height: '400px', width: '100%' }}>
-                <AgGridReact
-                    columnDefs={columns}
-                    rowData={filteredData}
-                    domLayout='autoHeight'
-                />
+        <div className="container mx-auto p-4 flex">
+            <div className="flex-grow">
+                <SearchBar query={query} setQuery={setQuery} />
+                <div className="ag-theme-alpine" style={{ height: '400px', width: '100%' }}>
+                    <AgGridReact
+                        columnDefs={columns}
+                        rowData={filteredData}
+                        domLayout='autoHeight'
+                        onRowClicked={onRowClicked}
+                    />
+                </div>
             </div>
+            {selectedCountryDetails ? (
+                <div className="flex-none w-96 bg-white p-5 shadow-lg z-10">
+                    <div className="text-lg">
+                        {selectedCountryDetails.text}
+                    </div>
+                </div>
+            ) : (
+                <div className="flex-none w-96 bg-white p-5 shadow-lg z-10">
+                    No country selected
+                </div>
+            )}
         </div>
     );
+
 };
 
 export default Flags;
