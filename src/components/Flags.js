@@ -3,7 +3,7 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { fetchCountries } from '../services/countryService';
-import SearchBar from './SearchBar';  // Import the SearchBar component
+import SearchBar from './SearchBar';
 
 const Flags = () => {
     const [rowData, setRowData] = useState([]);
@@ -16,7 +16,9 @@ const Flags = () => {
             setRowData(countries.map(country => ({
                 ...country,
                 flagUrl: country.flags.png,
-                searchKey: `${country.name.common} ${country.population}`.toLowerCase()
+                languages: Object.values(country.languages || {}).join(', '),
+                currencies: Object.values(country.currencies || {}).map(cur => `${cur.name} (${cur.symbol})`).join(', '),
+                searchKey: `${country.name.common} ${country.population} ${Object.values(country.languages || {}).join(' ')} ${Object.values(country.currencies || {}).map(cur => cur.name).join(' ')}`.toLowerCase()
             })));
         };
         getCountries();
@@ -27,13 +29,11 @@ const Flags = () => {
     }, [query, rowData]);
 
     const columns = [
-        {
-            headerName: "Flag",
-            field: "flagUrl",
-            cellRenderer: params => <img src={params.value} alt="flag" style={{ width: '32px', height: '24px' }} />
-        },
+        { headerName: "Flag", field: "flagUrl", cellRenderer: params => <img src={params.value} alt="flag" style={{ width: '32px', height: '24px' }} /> },
         { headerName: "Country", field: "name.common" },
         { headerName: "Population", field: "population" },
+        { headerName: "Languages", field: "languages" },
+        { headerName: "Currencies", field: "currencies" }
     ];
 
     return (

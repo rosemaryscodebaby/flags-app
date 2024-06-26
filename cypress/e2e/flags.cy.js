@@ -9,11 +9,18 @@ describe('Flags Integration Test', () => {
       cy.contains('France').should('be.visible');
     });
   
-    it('filters flags based on search input', () => {
+    it('filters flags based on country search input', () => {
       cy.visit('/');
       cy.get('input[placeholder="Search by name or population"]').type('Germany');
       cy.contains('France').should('not.exist');
       cy.contains('Germany').should('be.visible');
+    });
+
+    it('filters flags based on currency search input', () => {
+      cy.visit('/');
+      cy.get('input[placeholder="Search by name or population"]').type('Swiss Franc');
+      cy.contains('France').should('not.exist');
+      cy.contains('Switzerland').should('be.visible');
     });
   });
   

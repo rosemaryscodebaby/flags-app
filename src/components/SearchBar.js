@@ -5,7 +5,7 @@ const SearchBar = ({ query, setQuery }) => {
     return (
         <input
             type="text"
-            placeholder="Search by name or population"
+            placeholder="Search by keyword e.g. `Euro`"
             value={query}
             onChange={e => setQuery(e.target.value)}
             style={{ marginBottom: '10px', padding: '5px', width: '300px' }}

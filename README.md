@@ -1,3 +1,10 @@
+# Running the Flags App in Dev-Mode (localhost:3030)
+### `npm run dev`
+
+# Running End-to-End Tests with Cypress
+# NB First ensure the Flags App is running...
+### `npx cypress run`
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
